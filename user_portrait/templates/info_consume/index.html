@@ -1,0 +1,918 @@
+{% extends "info_consume/daohang_public.html" %}
+{% block title %}首页{% endblock %}
+{% block part_name %}形象画板{% endblock %}
+{% block css %}
+  <link rel="stylesheet" type="text/css" href="/static/info_consume/css/mystyle.css">
+  <link rel="stylesheet" type="text/css" href="/static/info_consume/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/info_consume/css/style.css">
+  <link href="/static/info_consume/css/dashboard.css" rel="stylesheet">
+  <style>
+   body {
+    /*background-color: #FCF8E3!important;*/
+    background-color: #e3fafc!important;
+    /*background: url(/static/info_consume/image/people.jpg) center top no-repeat,
+    url(/static/info_consume/image/nv.jpg) center bottom no-repeat;
+    background-size: 100% 50%,100% 51%!important;*/
+   }
+   .up_box {
+    margin-left: 185px;
+   }
+    .wel_count #weibo{
+      background: url(/static/info_consume/image/icon_weibo.png) no-repeat scroll 0% 0% transparent;
+    }
+    .wel_count #fans {
+      background: url(/static/info_consume/image/icon_fans.png) no-repeat scroll 0% 0% transparent;
+    }
+
+    .wel_count #focus{
+      background: url(/static/info_consume/image/icon_focus.png) no-repeat scroll 0% 0% transparent;
+    }
+    @media screen and (min-width: 450px) and (max-width: 1124px){
+        .up_box {
+          margin-left: 0!important;
+        }
+        .down_box {
+          margin-left: 0!important;
+        }
+    }
+    /*#account {
+      width: 0;
+      height: 0;
+    } */
+    /*.basicinfo {
+
+      width: 0;
+      height: 0;
+    }*/
+  </style>
+{% endblock %}
+
+{% block head_js %}
+  <script type="text/javascript" src='/static/info_consume/js/jquery.js'></script>
+  <script type="text/javascript" src='/static/info_consume/js/jquery.min.js'></script>
+  <script src="/static/info_consume/js/echarts.js"></script>
+  <script type="text/javascript" src="/static/info_consume/js/echarts-all.js"></script>
+  <script type="text/javascript" src="/static/info_consume/js/sliders.js"></script>
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+{% endblock %}
+
+
+{% block main %}
+<style type="text/css">
+
+
+</style>
+  <div class="up_box">
+    <div class="l_box">
+        <img id="portraitImg" src="http://tp2.sinaimg.cn/1878376757/50/0/1" width="200px" height="200px" style="margin:0 auto;border-radius:50%;" title="1314608344" >
+<!--Personal acconunt infomation-->
+      <div class="panel panel-success boxshadow" id="account" style="top:50px;left:0px;">
+          <div class="panel-heading">
+            <h3 class="panel-title">账户信息</h3>
+          </div>
+          <div class="panel-body">
+            <div class="basicinfo" style="float:left;width:245px;" >
+              <ul style="padding: 2px; margin-left: 15px;">
+                <li>
+                  <span  style="font-weight:bold;">用户ID：</span>
+                  <span id="uid"></span>
+                </li>
+                <li>
+                  <span style="font-weight:bold;">昵称：</span>
+                  <span id="username"></span>
+                </li>
+                <li>
+                  <span style="font-weight:bold;">是否认证：</span>
+                  <span id="verified"></span>
+                </li>
+                <li>
+                  <span style="font-weight:bold;">认证类型：</span>
+                  <span id="verfType"></span>
+                </li>
+                <li>
+                  <span style="font-weight:bold;">注册地：</span>
+                  <span id="userLocation"></span>
+                </li>
+                <li style="">
+                  <span style="float:left;font-weight:bold;">个人描述：</span>
+                  <span id="userdes" style="word-break:break-all;width: 150px;"></span></li>
+                <li>
+                  <span style="font-weight:bold;">微博主页：</span>
+                </li>
+                <li style="overflow:hidden;">
+                  <a href="" id="uhome" ></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+
+      </div>
+
+      <!--最近交互-->
+      <div class="panel panel-success boxshadow" id="his_vis" style="top:50px;left:0px;">
+        <div class="panel-heading">
+          <ul id="myTab" class="nav nav-tabs panel-title">
+             <li class="active">
+                <a href="#tweeted_out" data-toggle="tab">谁关注我</a>
+             </li>
+             <li><a href="#retweet_out" data-toggle="tab">我关注谁</a></li>
+          </ul>
+        </div>
+          <style type="text/css">
+            #tweeted_out div,#retweet_out div {
+              display: inline-block!important;
+              position: relative;
+              top: 10px;
+              width: 60px!important;
+            }
+            #tweeted_out div {
+              margin-left: 165px!important;
+              left: -60px;
+            }
+          </style>
+        <div id="myTabContent" class="tab-content">
+           <div class="tab-pane fade in active" id="tweeted_out">
+             <div id="p_so_onload" ><center>正在努力加载，请稍后...</center></div>
+             <span id="tweeted_out" style="margin-left:0px;float:left;width:110px;"></span>
+           </div>
+
+           <div class="tab-pane fade" id="retweet_out">
+             <div id="p_so_onload" ><center>正在努力加载，请稍后...</center></div>
+             <span id="retweet_out" style=" margin-left:0px;float:left;width:110px;"></span>
+           </div>
+        </div>
+
+      </div>
+        <!-- <div class="col-sm-3 col-md-2 sidebar">
+          
+            <div class="drop-navigation drop-navigation">
+              <ul class="nav nav-sidebar">
+              <li class="active"><a href="index.html" class="home-icon"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>主页</a></li>
+              <li class="menu1"><a href="#" class="menu1"><span class="glyphicon glyphicon-film" aria-hidden="true"></span>我的管家<span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a></li>
+                <ul class="cl-effect-2">
+                  <li><a href="/index/myzone/#keyword_cloud">我最爱说</a></li>
+                  <li><a href="/index/myzone">我的领域</a></li> 
+                  <li><a href="/index/myzone">我的影响力</a></li>
+                  <li><a href="/index/myzone">我的足迹</a></li>
+                  <li><a href="/index/myzone/#chos_mod_time">情绪管家</a></li>
+                </ul> -->
+                <!-- script-for-menu
+                <script>
+                  $( "li a.menu1" ).click(function() {
+                  $( "ul.cl-effect-2" ).slideToggle( 300, function() {
+                  // Animation complete.
+                  });
+                  });
+                </script>
+              <li><a href="#" class="menu"><span class="glyphicon glyphicon-film glyphicon-king" aria-hidden="true"></span>我的好友<span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a></li>
+                <ul class="cl-effect-1">
+                  <li><a href="/index/my_friend">亲密度排行</a></li>                                             
+                  <li><a href="/index/my_friend">最近访问</a></li>
+                  <li><a href="/index/my_friend">人际圈</a></li>   
+                </ul>
+                <!-- script-for-menu -->
+                 <script>
+                //   $( "li a.menu" ).click(function() {
+                //   $( "ul.cl-effect-1" ).slideToggle( 300, function() {
+                //   // Animation complete.
+                //   });
+                //   });
+                 </script>
+              <!-- <li><a href="/index/boot_test" class="song-icon"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>圈子发现</a></li>
+              <li><a href="/index/weiborecommand" class="news-icon"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>微博那些事</a></li>
+
+              </ul> -->
+              <!-- script-for-menu -->
+                <script>
+                  // $( ".top-navigation" ).click(function() {
+                  // $( ".drop-navigation" ).slideToggle( 300, function() {
+                  // // Animation complete.
+                  // });
+                  // });
+                </script>
+              <!-- <div class="side-bottom">
+                <div class="side-bottom-icons">
+                  <ul class="nav2">
+                    <li><a href="#" class="facebook"> </a></li>
+                    <li><a href="#" class="facebook twitter"> </a></li>
+                    <li><a href="/index/weiborecommand" class="facebook chrome"> </a></li>
+                    <li><a href="#" class="facebook dribbble"> </a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            </div>  -->
+
+
+
+
+
+
+
+      </div>
+
+    <div class="m_box" style="top:20px;">
+      
+      <span style="font-size:18px;margin-top:5px;margin-left:50px;font-weight: 900;color:blue;">Hi，</span>
+      <sapn id="username_greet" style="font-size:18px;margin-top:5px;font-weight: 900;color:blue;">  </sapn>
+      <span style="font-size:18px;margin-top:5px;font-weight: 900;color:blue;">,&nbsp
+           <script>
+           　　var enabled = 0; today = new Date();
+           　　var day;   
+               var date;
+           　　day = new Date()
+           　　hr = day.getHours()
+           　　if (hr ==1)
+           　　document.write("凌晨一点已过，别忘了休息喔！")
+           　　if (hr ==2)
+           　　document.write("该休息了，身体可是革命的本钱啊！")
+           　　if (hr ==3)
+           　　document.write("夜深人静，只有你敲击鼠标的声音...")
+           　　if (hr ==4)
+           　　document.write("四点过了，你明天不上班？？？")
+           　　if (hr ==5)
+           　　document.write("该去晨运了！！！")
+           　　if (hr ==6)
+           　　document.write("你知道吗，此时是国内网络速度最快的时候！")
+           　　if (hr ==7)
+           　　document.write("新的一天又开始了，祝你过得快乐！")
+           　　if ((hr ==8) || (hr == 9) || (hr ==10))
+           　　document.write("上午好！今天你看上去好精神哦！")
+           　　if (hr ==11)
+           　　document.write("十一点过了，快下班了吧？")
+           　　if (hr ==12)
+           　　document.write("十二点过了，还不下班？")
+           　　if ((hr==13) || (hr==14))
+           　　document.write("你不睡午觉？")
+           　　if ((hr==15) || (hr==16) || (hr==17))
+           　　document.write("下午好！困了就喝杯咖啡吧~")
+           　　if ((hr==18) || (hr==19))
+           　　document.write("吃晚饭了吧？")
+           　　if ((hr==20) || (hr==21) || (hr==22))
+           　　document.write("今晚又在这玩电脑了，没节目？")
+           　　if (hr==23)
+           　　document.write("真是越玩越精神，不打算睡了？")
+           　　if (hr==0)
+           　　document.write("凌晨了，还不睡？")           　
+          </script>
+       </span>  
+      <div class='wel_count'>   
+            <ul style="top:35px;left:60px;">
+              <li><a id="weibo" href="#" target="_blank" style="font-weight:900;color:#1217ea;">微博<br><span style="font-size:14px; margin-left:-5px;font-weight:900;color:#1217ea;" id="weibosum"></span></a></li>
+              <li><a id="fans" href="#" target="_blank" style="font-weight:900;color:#1217ea;">粉丝<br><span style="font-size:14px; margin-left:-10px;font-weight:900;color:#1217ea;" id="fansum"></span></a></li>
+              <li><a id="focus" href="#" target="_blank" style="font-weight:900;color:#1217ea;">关注<br><span style="font-size:14px; margin-left:1px;font-weight:900;color:#1217e;" id="attentionsum"></span></a></li>
+            </ul>
+            <div class="r_box" style="width:0;height:0;margin:0;top:-15px;left:200px;">
+
+      <div class="panel panel-success boxshadow weather" style="width: 210px !important;height:144px;margin:0;overflow:hidden;">
+        <div class="panel-heading" style="color:#000;font-weight:600;width: 40px;padding:31px 10px;">
+          贴心天气
+        </div>
+          <div style="margin:2px 15px;position: relative;top: -151px;left: 26px;width:152px;">
+          <iframe name="sinaWeatherTool" src="http://weather.news.sina.com.cn/chajian/iframe/weatherStyle30.html?city=%E5%8C%97%E4%BA%AC" width="200" height="200" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no">
+
+         </iframe>
+
+        </div>
+      </div>
+      </div>
+
+
+    </div>
+
+
+<div class="dashboard content_dashboard boxshadow" style="height:706px;width:650px;left:110px;top:75px;margin:0;padding-left:70px;">
+        <img id="draw_img" src="../../static/info_consume/image/icon_draw.png" width="30px" height="30px" >
+        <h1 id="board_title">我的形象画板</h1>
+        <img id="body_board" src="/static/info_consume/image/bodymodel_man.png" rel = "dns-prefetch">
+        <p id="draw_p1"></p>
+        <p id="draw_p2"></p>
+        <p id="draw_p3"></p>
+        <p id="draw_p4"></p>
+
+        <img id="influ_img" src="../../static/info_consume/image/icon_inf.png " width="30px" height="30px" >
+        <h1 id="influ_title">我的个人影响力</h1>
+          <div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-left bk-vcenter text-center">
+              <small style=" font: 16px/1.5 'Microsoft Yahei';color:#ffffff;">影响力得分：<span id="influencePower"></span>分</small>
+              <div class="progress bk-margin-off-bottom" style="height: 15px;">
+                <div class="progress thin progress-striped active">
+                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" style="width: 35%;" id="percentBar">
+                  <a href="/index/myzone/#influ_chart" target="_blank">
+                    <span class="sr-only">35% Complete</span></a>
+                  </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+
+
+        <img id="act_img" src="../../static/info_consume/image/icon_act.png " width="30px" height="30px" > 
+        <h1 id="act_title">我的活跃度:<span id="activePower"></span>分</h1>       
+        <h1 id="act_text" style="margin-top: 20px;margin-left: 20px;font-size: 20px !important;"> 最近活跃度有所下降哦，宝宝不开心了￣へ￣</h1>  
+      </div>
+
+
+
+
+
+    </div>
+    <p class="clear"></p>
+  </div>
+
+
+  <div class="down_box"><!--微博动态-->
+    <div class="panel panel-success" style="margin-left:0%;float:left;box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);">
+      <div class="panel-heading">
+        <h3 class="panel-title">最近动态</h3>
+      </div>
+      <div class="panel-body">
+          
+          <div class="tweetinfo" style="float:left;width:942px;background:#fff;margin-left:10px;" >
+              <div style="width:100%;margin-top:10px;">
+                <span style= "color:#000;font-weight:bold;margin-left:20px;float:left;">排序方式</span>
+                <ul id="modechoose">
+                  <label class="demo--label">
+                    <li style="float:left;margin-left:5px;">
+                      <input class="demo--radio" type="radio" name="mode_choose" value="timestamp" checked="checked" >
+                      <span class="mode demo--radioInput" style=""></span>时间
+                    </li>
+                  </label>
+
+                  <label class="demo--label">
+                    <li style="float:left;margin-left:5px;">
+                      <input class="demo--radio" type="radio" name="mode_choose" value="comment_count">
+                      <span class="mode demo--radioInput" style=""></span>评论数
+                    </li>
+                  </label>
+
+                  <label class="demo--label">
+                    <li style="float:left;margin-left:5px;">
+                      <input class="demo--radio" type="radio" name="mode_choose" value="retweet_count">
+                      <span class="mode demo--radioInput" style=""></span>转发数
+                    </li> 
+                  </label>
+
+                </ul>
+              </div>
+            <!--
+              <span style= "color:#1C41CE;width:100%;margin-left:20px;font-size:16px;float:left;margin-bottom:10px;">相关微博</span>
+            --><!-- weiboData -->
+               <div id="per_onload" style="width:100%;height:59px;float:left"><center>正在努力加载中...</center></div>
+               <div class="tang-scrollpanel-content" style="margin-top:10px;">
+                <div id='group_influ_weibo' style='overflow-x:hidden;width:950px;float:left;'>
+                <div id="group_influ_weibo_result" style="float:left;width:100%;"></div>
+                      <div id="pageGro" class="cb" style="display:none;float:left;width:600px;height:60px;margin-left:200px;margin-top:40px;line-height:23px;">
+                          <span class="pageUp" style="float:left;">上一页</span>
+                          <span class="pageList" style="float:left;">
+                              <ul>
+                                  <li>1</li>
+                                  <li>2</li>
+                                  <li>3</li>
+                                  <li>4</li>
+                                  <li>5</li>
+                              </ul>
+                          </span>
+                          <span class="pageDown" style="margin-left:20px;cursor:pointer;">下一页</span>
+                      </div>         
+                  </div>
+            </div>
+          <div id="float-wrap" class="hidden"></div>
+
+      </div>
+    </div>    
+  </div>
+<!-- 
+<style>
+  .siblings *{
+  display: block;
+  border: 2px solid lightgrey;
+  color: lightgrey;
+  padding: 5px;
+  margin: 15px;
+  }
+</style>
+<div id="test" style="width:500px;" class="siblings">
+  <ul>ul (父节点)  
+    <li>1</li>
+    <li>2</li>
+    <li class="start">3</li>
+    <li>4</li>
+    <li>5</li>
+  </ul>   
+</div>
+<script>
+$(document).ready(function(){
+  $("li.start").siblings().css({"color":"red","border":"2px solid red"});
+});
+</script>
+ -->
+  {% endblock %}
+
+  <!--End js-->
+{% block Own_js %}
+<!-- <script type="text/javascript" src="/static/info_consume/js/homepage.js"></script>
+ --><script type="text/javascript" src="/static/info_consume/js/index_show_friend.js"></script>
+<script>
+
+function homepageinfo() {
+  this.ajax_method = 'GET';
+}
+homepageinfo.prototype = {
+  call_sync_ajax_request:function(url,method,callback) {
+    $.ajax({  
+    url: url,
+    type: method,
+    dataType:'json',
+    async:true,
+    success:callback
+  });
+  },
+  personData:function(data){
+
+  //console.log("personData"+data);
+  personalData = data ;
+  var uid_div = document.getElementById('uid');
+  if(personalData.uid){
+      //console.log(personalData.uid)
+      uid_div.innerHTML = personalData.uid;
+  }else{
+      uid_div.innerHTML = "无此数据";
+  }
+  var img = document.getElementById('portraitImg');
+  if(personalData.photo_url == "unknown"){
+      img.src =  "http://tp2.sinaimg.cn/1878376757/50/0/1";
+  }else{
+      img.src = personalData.photo_url;
+  }
+
+  var nickName = document.getElementById('username');
+  if(personalData.nick_name){
+      if (personalData.nick_name == 'unknown') {
+          nickName.innerHTML = '未知';
+      }
+      else{
+          nickName.innerHTML = personalData.nick_name;
+      }
+  }else{
+      nickName.innerHTML = "无此数据";
+  }
+   
+   var nickName_greet = document.getElementById('username_greet');
+     nickName_greet.innerHTML = personalData.nick_name;
+        
+   var Verfi = document.getElementById('verified');
+   var drawVerfi = document.getElementById('draw_p1');
+   if( personalData.verified_type==""){
+       personalData.verified_type = "暂无数据";
+   }
+       var verf = personalData.verified_type;
+       var Verf_type = document.getElementById('verfType');
+       if(verf != 0 && verf != 1 && verf != 2 && verf != 3 && verf != 4 && verf != 5 && verf != 6 && verf != 7 && verf != 8 && verf != 200 && verf != 220 && verf != 400 ){
+       Verfi.innerHTML = "否";
+       if(verf == -1){
+         Verf_type.innerHTML = personalData.verified_type_ch;
+         drawVerfi.innerHTML = "认证类型："+personalData.verified_type_ch;
+       }else{
+         Verf_type.innerHTML = "无";
+         drawVerfi.innerHTML = "认证类型：未知";
+       }
+   }else{
+       Verfi.innerHTML = "是";
+     Verf_type.innerHTML = personalData.verified_type_ch;
+     drawVerfi.innerHTML = "认证类型："+personalData.verified_type_ch;
+   }
+
+
+       var Fansum = document.getElementById('fansum');
+   if( personalData.fansnum==""){
+       personalData.fansnum = "暂无数据";
+   }
+       Fansum.innerHTML = personalData.fansnum;
+   var Attentionsum = document.getElementById('attentionsum');
+   if( personalData.friendsnum==""){
+       personalData.friendsnum = "暂无数据";
+   }
+       Attentionsum.innerHTML = personalData.friendsnum;
+   var Weibosum = document.getElementById('weibosum');
+   if( personalData.statusnum==""){
+       personalData.statusnum = "暂无数据";
+   }
+       Weibosum.innerHTML = personalData.statusnum;
+   var Loca = document.getElementById('userLocation');
+   if( personalData.user_location==""){
+       personalData.user_location = "暂无数据";
+   }
+   Loca.innerHTML = personalData.user_location;
+   var Descrip = document.getElementById('userdes');
+   if( personalData.description==""){
+       personalData.description = "暂无数据";
+       }else if (personalData.description.length>50){
+       Descrip.innerHTML = personalData.description.substr(0,50)+'...';
+           Descrip.title = personalData.description;
+      }else{
+       Descrip.innerHTML = personalData.description;}
+           var homepage = document.getElementById('uhome');
+           if(!personalData.uid ){
+               homepage.innerHTML = "无此数据";
+           }else{
+               homepage.innerHTML = '<a id="openurl" style="cursor:pointer" onclick="openurl();">http://weibo.com/u/'+personalData.uid;
+           }  
+    var userImg = document.getElementById('body_board')
+      //console.log(userImg);
+      if (personalData.sex == ""){
+        personalData.sex = '暂无数据';
+        //console.log(none);  
+      } else if (personalData.sex == 1) {
+        userImg.src = "/static/info_consume/image/bodymodel_man.png";
+      //  console.log(1);
+      }else if (personalData.sex == 2) {
+        userImg.src = "/static/info_consume/image/bodymodel_woman.png";
+        userImg.style = "width: 350px;margin-left: -77px;float: none;margin-top: 60px;display: block;opacity:0.8;";
+       // console.log(2);
+      } 
+   
+   },
+   //影响力和活跃度数据
+    overallData:function(data){
+    //console.log(data);
+    //影响力
+     var FP = document.getElementById('influencePower');
+       if(data.influence[0] !=""){
+           FP.innerHTML = data.influence[0].toFixed(2);
+       }else{
+           FP.innerHTML = '0';
+       }
+      var perofinf = data.influence[0];
+      perofinf = perofinf/100*440;
+      $("#percentBar").css("width",perofinf);
+    //活跃度
+     var AP = document.getElementById('activePower');
+       if(data.activeness[0] !=""){
+          AP.innerHTML = data.activeness[0].toFixed(2);
+       }else{
+          AP.innerHTML = '0'
+       }
+     var actScore = document.getElementById('act_text');
+      if (data.activeness[0]<80) {
+        actScore.innerHTML = '最近活跃度有所下降哦，宝宝不开心了￣へ￣';
+      }else if (data.activeness[0]>=80){
+        actScore.innerHTML = '最近很活跃，么么哒(づ￣ 3￣)づ';
+      }
+    },
+
+    //地域
+    geoData:function(data)
+    {
+      var drawGeo = document.getElementById('draw_p4');
+        if(data.all_top[0][0] !=""){
+            drawGeo.innerHTML = "最常登录："+data.all_top[0][0];
+            //console.log(data.all_top[0][0]);
+        }else{
+            drawGeo.innerHTML = '最常登录：未知';
+        }
+    },
+
+    domain:function(data){
+      // var str = data;
+      // console.log(str.split("&")[0]);
+      // document.getElementById('draw_p2').innerHTML = str.split("&")[0];
+      var i;
+      //将此人涉及领域从数据库取出，
+      var domain = new Array();
+      var num = new Array();
+      
+      for (i=0;i<data.in_topic.length;i++) 
+      {
+        domain[i]=data.in_topic[i][0];
+        num[i]=data.in_topic[i][1];
+      }
+
+      var topdomain = domain[0];
+      var othernum;
+      for (var j = 0; j < data.in_topic.length; j++) {
+        if (domain[j] == "其他类") {
+          othernum = j;
+          break;
+        }
+      }
+      if(othernum == 0){
+        topdomain = domain[1];
+      }  
+      document.getElementById('draw_p2').innerHTML ="活跃领域："+ topdomain;
+      //console.log("topdomain="+topdomain);
+    },
+
+    //亲密度排行
+    intimacy_rank:function(data)
+    {
+      var drawFriend = document.getElementById('draw_p3');
+        if(data[0].uname !=="未知"){
+            drawFriend.innerHTML = "亲密好友："+data[0].uname;
+            //console.log(data[0].uname);
+        }else if (data[0].uname ="未知") {
+            drawFriend.innerHTML = '亲密好友：'+data[0].uid;
+        }
+    },
+    // 微博数据
+    weiboData:function(data){
+      weiboData = data;
+      DrawWeibo(data,'group_influ_weibo', 'group_influ_weibo_result');
+        $('#per_onload').css('display','none');
+        $('#group_influ_weibo').css('display', 'block');
+    }
+}
+var Personal = new homepageinfo();
+var personalData; // global data
+var overallData;
+var weiboData;
+var uid = 1640601392;
+
+function openurl(){
+  var ourl = $('#openurl').text();
+  window.open(ourl);
+ }
+
+$(function(){
+  $('#modechoose').click(function(){
+  var box = document.getElementsByName('mode_choose');
+  var com_flag = false;
+  var tim_flag = false;
+  var ret_flag = false;
+
+  for(var i=0;i<box.length;i++){
+    if(box[i].value == "comment_count" && com_flag == false){
+      $('#per_onload').css('display', 'block');
+      $('#group_influ_weibo').css('display', 'none')
+      var url = "/attribute/new_user_weibo/?uid="+uid+"&sort_type=comment_count";
+      Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.weiboData);
+
+      com_flag = true;
+    };
+
+    if(box[i].value == "retweet_count" && ret_flag == false){
+      $('#per_onload').css('display', 'block');
+      $('#group_influ_weibo').css('display', 'none')
+      var url = "/attribute/new_user_weibo/?uid="+uid+"&sort_type=retweet_count";
+      Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.weiboData);
+
+      com_flag = true;
+    }
+
+    if(box[i].value == "timestamp" && tim_flag == false){
+      $('#per_onload').css('display', 'block');
+      $('#group_influ_weibo').css('display', 'none')
+      var url = "/attribute/new_user_weibo/?uid="+uid+"&sort_type=timestamp";
+      Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.weiboData);
+
+      com_flag = true;
+    }
+
+  }
+  });
+});
+
+function DrawWeibo(data, div_name, sub_div_name){
+    page_num = 5;
+    if (data.length < page_num) {
+       // console.log('data_length', data.length);
+        $('#'+ div_name + ' #pageGro .pageUp').css('display', 'none');
+        $('#'+ div_name + ' #pageGro .pageList').css('display', 'none'); 
+        $('#'+ div_name + ' #pageGro .pageDown').css('display', 'none'); 
+        if (data.length == 0) {
+            $('#' + sub_div_name).empty();
+            $('#' + sub_div_name).append('暂无数据');
+            $('#' + sub_div_name).css('height','300px');
+        }else{
+            $('#'+ div_name + ' #pageGro').css('display', 'block');
+            page_num = data.length
+            page_group_influ_weibo( 0, page_num, data, sub_div_name);
+        }
+    }else {
+          $('#'+ div_name + ' #pageGro').css('display', 'block');
+          page_group_influ_weibo( 0, page_num, data, sub_div_name);
+          var total_pages = 0;
+          if (data.length % page_num == 0) {
+              total_pages = data.length / page_num;
+          }
+          else {
+              total_pages = Math.round(data.length / page_num) + 1;
+          }
+        }
+    var pageCount = total_pages;
+    
+    if(pageCount>5){
+        page_icon(1,5,0, div_name);
+    }else{
+        page_icon(1,pageCount,0, div_name);
+    }
+    
+    $("#"+div_name+" #pageGro").on("click","li", function(){
+        if(pageCount > 5){
+            var pageNum = parseInt($(this).html());
+            pageGroup(pageNum,pageCount);
+        }else{
+            $(this).addClass("on");
+            $(this).siblings("li").removeClass("on");
+        }
+
+      page = parseInt($("#"+div_name+" #pageGro li.on").html())  
+      //console.log('page', page);         
+      start_row = (page - 1)* page_num;
+      end_row = start_row + page_num;
+      if (end_row > data.length)
+          end_row = data.length;
+        // console.log('start', start_row);
+        // console.log('end', end_row);
+        // console.log('data',data);
+        page_group_influ_weibo(start_row,end_row,data, sub_div_name);
+    });
+
+    $("#"+div_name+" #pageGro .pageUp").off('click').click(function(){
+        if(pageCount > 5){
+            var pageNum = parseInt($("#"+div_name+" #pageGro li.on").html());
+            pageUp(pageNum,pageCount);
+        }else{
+            var index = $("#"+div_name+" #pageGro ul li.on").index();
+            if(index > 0){
+                $("#"+div_name+" #pageGro li").removeClass("on");
+                $("#"+div_name+" #pageGro ul li").eq(index-1).addClass("on");
+            }
+        }
+      page = parseInt($("#"+div_name+" #pageGro li.on").html())  
+      //console.log(page);
+      start_row = (page-1)* page_num;
+      end_row = start_row + page_num;
+      if (end_row > data.length){
+          end_row = data.length;
+      }
+        page_group_influ_weibo(start_row,end_row,data, sub_div_name);
+    });
+  
+  $("#" + div_name + " #pageGro .pageDown").off('click').click(function(){
+        if(pageCount > 5){
+            var pageNum = parseInt($("#"+div_name+" #pageGro li.on").html());
+            pageDown(pageNum,pageCount);
+        }else{
+            var index = $("#"+div_name+" #pageGro ul li.on").index();
+            if(index+1 < pageCount){
+                $("#"+div_name+" #pageGro li").removeClass("on");
+                $("#"+div_name+" #pageGro ul li").eq(index+1).addClass("on");
+            }
+        }
+      page = parseInt($("#"+div_name+" #pageGro li.on").html()) 
+      //console.log(page);
+      start_row = (page-1)* page_num;
+      end_row = start_row + page_num;
+      if (end_row > data.length){
+          end_row = data.length;
+      }
+        page_group_influ_weibo(start_row,end_row,data, sub_div_name);
+    });
+
+}
+
+function pageGroup(pageNum,pageCount){
+  switch(pageNum){
+    case 1:
+      page_icon(1,5,0);
+    break;
+    case 2:
+      page_icon(1,5,1);
+    break;
+    case pageCount-1:
+      page_icon(pageCount-4,pageCount,3);
+    break;
+    case pageCount:
+      page_icon(pageCount-4,pageCount,4);
+    break;
+    default:
+      page_icon(pageNum-2,pageNum+2,2);
+    break;
+  }
+}
+
+function pageUp(pageNum,pageCount){
+  switch(pageNum){
+    case 1:
+    break;
+    case 2:
+      page_icon(1,5,0);
+    break;
+    case pageCount-1:
+      page_icon(pageCount-4,pageCount,2);
+    break;
+    case pageCount:
+      page_icon(pageCount-4,pageCount,3);
+    break;
+    default:
+      page_icon(pageNum-2,pageNum+2,1);
+    break;
+  }
+}
+
+
+function pageDown(pageNum,pageCount){
+  switch(pageNum){
+    case 1:
+      page_icon(1,5,1);
+    break;
+    case 2:
+      page_icon(1,5,2);
+    break;
+    case pageCount-1:
+      page_icon(pageCount-4,pageCount,4);
+    break;
+    case pageCount:
+    break;
+    default:
+      page_icon(pageNum-2,pageNum+2,3);
+    break;
+  }
+}
+
+function page_icon(page,count,eq){
+  var ul_html = "";
+  for(var i=page; i<=count; i++){
+    ul_html += "<li>"+i+"</li>";
+  }
+  $("#pageGro ul").html(ul_html);
+  $("#pageGro ul li").eq(eq).addClass("on");
+}
+
+function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
+    weibo_num = end_row - start_row;
+    $('#'+ sub_div_name).empty();
+    //console.log(data);
+    var html = "";
+    html += '<div class="group_weibo_font" style="margin-right:5px;margin-top:15px;">';
+    for (var i = start_row; i < end_row; i += 1){
+        s=(i+1).toString();
+    var mid = data[i][0];
+    var uid = data[i][1];
+        var geo = data[i][4];
+        var text = data[i][2];
+    var retweet_count = data[i][7];
+    var comment_count = data[i][8];
+    //console.log(retweet_count);
+   // console.log(comment_count);
+    // var mingan_count = data[i][9];
+        //var location = data[i][2];
+        var date = data[i][6];
+        var tweet_ulr = data[i][10];
+        //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
+        if (i%2 ==0){
+            html += '<div style="float:left;padding:5px;width: 100%;background:whitesmoke;">';
+    }
+        else{
+            html += '<div style="float:left;padding:5px;width: 100%;">';
+    }
+    if(geo==null){
+        geo='未知';
+    }
+            html += '</a>('+geo+')&nbsp;&nbsp;微博:<font color=black>' + text + '</font></p>';    
+            //html += '<p style="margin-left:10px;">'+s+'、昵称：<a target="_blank" href="/index/personal/?uid=' + uid + '">' + Pname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';    
+            html += '<p style="float:left;width:100%;margin-top:-5px;margin-left:10px;">';
+            html += '<span style="float:right;padding-right: 10px;color:#858585"><span>转发数('+ retweet_count +')&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>评论数('+ comment_count +')</span></span>';
+            html += '<span style="float:left"><u>'+date+'</u> - <a color:#e0e0e0 target="_blank"  href="'+tweet_ulr+'">' + '微博' + '</a>-<a target="_blank" href="/index/viewinformation/?uid=' + uid + '">用户详情</a></span>';
+            html += '</p>';
+      html += '</div>';
+        
+    }
+    html += '</div>'; 
+    $('#'+sub_div_name).append(html);
+}
+
+var uid = 1640601392;
+var Personal = new homepageinfo();
+var personalData; // global data
+
+//
+//好友亲密度排行
+var url ="/info_person_social/bidirect_interaction/?uid="+uid;
+Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.intimacy_rank);
+//地点
+var geo_url = '/attribute/location/?uid='+uid+'&time_type=month';
+Personal.call_sync_ajax_request(geo_url, Personal.ajax_method, Personal.geoData);
+//领域
+var url = '/attribute/info_new_user_social/?uid='+uid;
+Personal.call_sync_ajax_request(url,Personal.ajax_method,Personal.domain);
+
+//个人画像信息排行
+var url = "/attribute/new_user_profile/?uid=" + uid;
+Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.personData);
+var url = "/attribute/new_user_evaluate/?uid=" + uid;
+Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.overallData);
+var url = "/attribute/new_user_weibo/?uid="+uid+"&sort_type=timestamp";
+Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.weiboData);
+
+
+//最新update
+
+</script>
+
+{% endblock %}
+
+

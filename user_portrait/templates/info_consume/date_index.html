@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>date_index</title>
+	<link rel="stylesheet" type="text/css" href="../../static/info_consume/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../static/info_consume/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../static/info_consume/css/bootstrap-datetimepicker.css" />
+	
+	<!-- <link href="../../static/info_consume/css/bootstrap-table.css" rel="stylesheet" >
+    <link href="../../static/info_consume/css/bootstrap-select.min.css" rel="stylesheet" >
+    <link href="../../static/info_consume/css/bootstrap-table.css" rel="stylesheet" >
+    <link href="../../static/info_consume/css/boot_test.css" rel="stylesheet">
+ -->
+
+	<link rel="stylesheet" type="text/css" href="../../static/info_consume/css/date_index.css">
+	<script type="text/javascript" src="../../static/info_consume/js/jquery.js"></script>
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<script type="text/javascript" src="../../static/info_consume/js/moment.min.js"></script>
+	<script type="text/javascript" src="../../static/info_consume/js/moment-with-locales.min.js"></script>
+	<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../../static/info_consume/js/bootstrap-datetimepicker.min.js"></script>
+	<style type="text/css">
+		@media screen and (min-width: 850px) and (max-width: 1200px){
+		#index_bottom table {
+			min-width: 636px;
+		}
+        .sousuo {
+        	margin-left: 0!important;
+        }
+    }
+
+
+	</style>
+
+	<script type="text/javascript">
+        function checkText(){
+            var textValue = document.getElementById("input").value;
+            if(textValue == ""){
+                alert("输入框不能为空！");
+            }
+        }
+    </script>
+    <script type="text/javascript">
+	function goto_date_detail() {
+		//console.log('123');
+			var topic_name = $('#input').val();
+			var date_from = $('#input_date_from_create').val();
+			var date_to = $('#input_date_to_create').val();
+			var start_time_create = datetime_to_timestamp(date_from);   
+			//时间戳形式
+			var end_time_create = datetime_to_timestamp(date_to);  
+			//时间戳形式
+			
+			check_status(topic_name,start_time_create,end_time_create)
+
+
+
+			// window.open('/topic_time_analyze/time/?topic_name='+topic_name+'&date_from='+date_from+'&date_to='+date_to); 
+			
+		}
+	</script>
+
+</head>
+
+<body>
+<div id="index_top">
+	<img id="date" src="../../static/info_consume/image/date.png">
+
+<!-- 搜索框 -->
+<div class='sousuo' style="padding: 100px 100px 10px;position: relative;margin-left: 36%;margin-top: -6%;">
+   <form class="bs-example bs-example-form" role="form">
+      <div class="row">
+         <div class="col-lg-4">
+            <div class="input-group">
+               <input id="input" type="text" class="form-control" placeholder="热门话题那些事儿" onblur="checkText();">
+              <script type="text/javascript">
+				
+					var topic_name = "{{topic_name}}";
+					
+					if(topic_name){
+						$("#input").val(topic_name);
+					}
+			
+				
+			</script>
+               <span class="input-group-btn">
+                  <button class="btn btn-default" type="button" onclick="Draw_similar_topic_result()" >
+                     Go!
+                  </button>
+               </span>
+            </div><!-- /input-group -->
+         </div><!-- /.col-lg-6 -->
+      </div><!-- /.row -->
+   </form>
+
+</div>
+
+
+<script language='javascript'>
+   document.onkeydown=function(){
+           if (event.keyCode == 13){
+              Draw_similar_topic_result();
+           }
+           // else{
+           //    alert('你按错了键.');
+           // }
+          }
+</script>
+
+<!-- 模态框：新建任务 -->
+
+<div class="modal fade" id="create_task" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               温馨提示
+            </h4>
+         </div>
+         <div class="modal-body">
+            请填写新建话题任务的相关信息。
+            <div id="topic_similar">
+            	<p><span><b>话题名称：</b><input id="create_topic" type="" name="" placeholder="请输入你感兴趣的话题名称" style="margin-left: 0.5%;margin-top: 2%;"> </span></p>
+            	<p style="margin-top: 3%;"><span><b>时间范围：</b>
+            		<div class="container">
+						<!-- <p class="topic_time_from_create" style="margin-top: 5%;">From</p> -->
+						<div class='col-md-3' id="date_create_from">
+							<div class="form-group">
+					    		<div class='input-group date' id='datetimepicker_create_from' style="width: 202px;margin-left: 17%;margin-top: -15%;float: left;">
+					    			<input id="input_date_from_create" type='text' class="form-control"/>
+					    			<span class="input-group-addon">
+					    				<span class="glyphicon glyphicon-calendar"></span>
+					    			</span>
+							 	</div>
+							</div>
+						</div>
+					   <span class="topic_time_to_create" style="float: left;position: relative;margin-left: -1%;margin-top: -2.6%;">到</span> 
+						<div class='col-md-3' id="date_create_to">
+							<div class="form-group">
+								<div class='input-group date' id='datetimepicker_create_to' style="width: 202px;margin-top: -15%;margin-left: -1%;float: left;">
+					    			<input id="input_date_to_create" type='text' class="form-control" />
+					    			<span class="input-group-addon">
+					    				<span class="glyphicon glyphicon-calendar"></span>
+					    			</span>
+								</div>
+							</div>
+						</div>
+
+					    			<!-- <div class="btn_commit" class="bs-example">
+					   					<button type="button" class="btn btn-primary" style="background-color: #00CC66;border-color: #00CC66;font-family: Microsoft YaHei;">确定</button>
+									</div> -->
+
+					</div>
+								
+					<script type="text/javascript">
+					    // var current_datetime = new Date();
+					    // console.log(current_datetime);
+					    // $(document).ready(function(){
+					    //     //时间控件初始化
+					    //     $('#datetimepicker').datetimepicker({
+					    //           // lang:"ch",           //语言选择中文
+					    //           // format:"Y-m-d",      //格式化日期
+					    //           // timepicker:false,    //关闭时间选项
+					             
+					    //           // minDate: 0,          //最小日期
+					    //           maxDate:current_datetime, //最大日期不能超过当前时间
+					    //           // todayButton:false    //关闭选择今天按钮
+					    //     });
+					    // });
+
+					    $(function () {
+					        $('#datetimepicker_create_from').datetimepicker();
+					        $('#datetimepicker_create_to').datetimepicker();
+					        $("#datetimepicker_create_from").on("dp.change",function (e) {
+					            $('#datetimepicker_create_to').data("DateTimePicker").minDate(e.date);
+					        });
+					        $("#datetimepicker_create_to").on("dp.change",function (e) {
+					            $('#datetimepicker_create_from').data("DateTimePicker").maxDate(e.date);
+					        });
+					    });
+					</script>
+            	</span></p>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" 
+               data-dismiss="modal">换个词试试
+            </button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#jindutiao_task" onclick="Submit_task_result()">
+               提交任务
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+
+
+<div id="index_bottom">
+	<!-- <img id="eye" src="../../static/info_consume/image/eye.png" >
+	<p id="text" >大家都在看</p>
+	 -->
+</div>
+
+</body>
+	
+	<script type="text/javascript">var user_glo='{{g.user.email}}'</script>
+	<script type="text/javascript" src="../../static/info_consume/js/date_index.js"></script>
+
+</html>
