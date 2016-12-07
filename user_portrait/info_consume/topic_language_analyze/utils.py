@@ -15,6 +15,7 @@ from xpinyin import Pinyin
 from user_portrait.global_utils import R_ADMIN as r
 from user_portrait.global_utils import topic_queue_name,es_flow_text,flow_text_index_name_pre,flow_text_index_type
 from keyword_extraction import get_weibo
+#from user_portrait.cron.info_consume.event_compute_topic import compute_topic_task
 # from cp_global_config import db,es_user_profile,profile_index_name,profile_index_type,\
 #                             topics_river_index_name,topics_river_index_type,\
 #                             subopinion_index_name,subopinion_index_type
@@ -148,11 +149,12 @@ def submit(topic,start_ts,end_ts,submit_user):
         'submit_ts':int(time.time())
     }
     try:
-        print weibo_es.get(index=topic_index_name, doc_type=topic_index_type, id=submit_id)['_source']
-        result = 'already_have'
+        status = weibo_es.get(index=topic_index_name, doc_type=topic_index_type, id=submit_id)['_source']['comput_status']
+        result = status
     except:
         weibo_es.index(index=topic_index_name,doc_type=topic_index_type,id=submit_id,body=query_body)
-        result = 'success'
+        result = 'push success'
+        #compute_topic_task(query_body)
     r.lpush(topic_queue_name,json.dumps(query_body))
     #该push到redis里，然后改status  计算完了再改回来
     return result
@@ -402,6 +404,9 @@ def get_sen_ratio(topic,start_ts,end_ts):
     print result
     return result
 
+def get_count(topic,start_ts,end_ts):
+    weibo_count = weibo_es.count(index=topic)
+    return weibo_count['count']
 
 
 if __name__ == '__main__':

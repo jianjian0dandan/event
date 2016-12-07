@@ -3,7 +3,7 @@
 from flask import Blueprint,render_template,request
 from user_portrait.global_config import db
 from utils import get_during_keywords,get_topics_river,get_weibo_content,get_subopinion,get_symbol_weibo,get_topics
-from utils import submit,get_key_topics,delete,get_sen_ratio
+from utils import submit,get_key_topics,delete,get_sen_ratio,get_count
 import json
 from user_portrait.info_consume.topic_sen_analyze.views import sen_time_count
 
@@ -125,6 +125,16 @@ def sen_ratio():
     time_count = get_sen_ratio(topic,start_ts,end_ts)
     return json.dumps(time_count)
 
+
+@mod.route('/weibo_count/')
+def weibo_count():
+    topic = request.args.get('topic','')
+    end_ts = request.args.get('end_ts', '')
+    end_ts = long(end_ts)
+    start_ts = request.args.get('start_ts', '')
+    start_ts = long(start_ts)
+    count = get_count(topic,start_ts,end_ts)
+    return json.dumps(count)
 
 @mod.route('/test/',methods=['GET', 'POST'])
 def test():
